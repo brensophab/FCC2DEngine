@@ -10,15 +10,15 @@ public class Shader {
 
     private String vertexSource;
     private String fragmentSource;
-    private String filepath;
+    private String filepath;}
 
-    public Shader(String filepath){
+  /*  public Shader(String filepath){
         this.filepath = filepath;
         try{
         String source = new String(Files.readAllBytes(Paths.get(filepath)));
         String[] splitString = source.split("(#type)( )([a-z]A-Z]+)");
 
-        int index = source.indexOf("#type") + 6;
+        int index = source.indexOf("#type") + 6; //  6 is the value of #type lines
         int eol = source.indexOf("\r\n", index);
         String firstPattern = source.substring(index, eol).trim();
         index = source.indexOf("#type", eol) + 6;
@@ -42,3 +42,4 @@ public class Shader {
 
     }
 }
+*/
