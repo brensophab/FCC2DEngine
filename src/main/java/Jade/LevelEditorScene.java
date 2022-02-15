@@ -93,6 +93,7 @@ public class LevelEditorScene extends Scene {
             System.out.println(glGetShaderInfoLog(vertexID,len));
             assert false: "";
         }
+
         //First load and compile fragment shader
         fragmentID = glCreateShader(GL_FRAGMENT_SHADER);
 
