@@ -6,8 +6,10 @@ import java.awt.event.KeyEvent;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+import static org.lwjgl.opengl.ARBVertexArrayObject.glBindVertexArray;
+import static org.lwjgl.opengl.ARBVertexArrayObject.glGenVertexArrays;
 import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL30.*;
+
 
 public class LevelEditorScene extends Scene {
 //get shaders to draw to scene
@@ -22,8 +24,9 @@ public class LevelEditorScene extends Scene {
         "{\n" +
         "    fColor = aColor;\n" +
         "    gl_Position = vec4(aPos, 1.0);\n" +
-        "    \n" +
+        "\n" +
         "}";
+
     private String fragmentShaderSrc = "#version 330 core\n" +
             "\n" +
             "in vec4 fColor;\n" +
@@ -115,7 +118,7 @@ public class LevelEditorScene extends Scene {
         //==============================================================
         //Generate VAO, VBO, and EBO buffer objects and send data to gpu
         //==============================================================
-        vaoID =glGenVertexArrays();
+        vaoID = glGenVertexArrays();
         glBindVertexArray(vaoID);
 
         //create float buffer for vertices
@@ -131,15 +134,43 @@ public class LevelEditorScene extends Scene {
         IntBuffer elementBuffer = BufferUtils.createIntBuffer(elementArray.length);
         elementBuffer.put(elementArray).flip();
 
-        eboID =glGenBuffers();
+        eboID = glGenBuffers();
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, elementBuffer, GL_STATIC_DRAW);
 
         //ADD vertex attribute pointers
+        int positionsSize = 3;
+        int colorSize = 4;
+        int floatSizeBytes = 4;
+        int vertexSizeBytes = (positionsSize + colorSize) * floatSizeBytes;
+        glVertexAttribPointer(0, positionsSize, GL_FLOAT, false, vertexSizeBytes, 0);
+        glEnableVertexAttribArray(0);
+
+        glVertexAttribPointer(1, colorSize, GL_FLOAT, false, vertexSizeBytes, positionsSize*floatSizeBytes);
+        glEnableVertexAttribArray(1);
     }
 
     @Override
     public void update(float dt) {
+        //Bind shader program
+        glUseProgram(shaderProgram);
+        //Bind vao that we use
+        glBindVertexArray(vaoID);
+
+        //Enable vertex attribute pointers
+        glEnableVertexAttribArray(0);
+        glEnableVertexAttribArray(1);
+
+        glDrawElements(GL_TRIANGLES, elementArray.length, GL_UNSIGNED_INT, 0);
+
+
+        //Unbind everything
+        glDisableVertexAttribArray(0);
+        glDisableVertexAttribArray(1);
+
+        glBindVertexArray(0);
+
+        glUseProgram(0);
 
     }
 }
