@@ -1,31 +1,33 @@
 package Jade;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.ARBVertexArrayObject;
 
 import java.awt.event.KeyEvent;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import static org.lwjgl.opengl.ARBVertexArrayObject.glBindVertexArray;
-import static org.lwjgl.opengl.ARBVertexArrayObject.glGenVertexArrays;
+
 import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL30.glBindVertexArray;
+import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 
 public class LevelEditorScene extends Scene {
-//get shaders to draw to scene
+    //get shaders to draw to scene
     private String vertexShaderSrc = "#version 330 core\n" +
-        "layout(location=0) in vec3 aPos;\n" +
-        "layout(location=1) in vec4 aColor;\n" +
-        "\n" +
-        "\n" +
-        "out vec4 fColor;\n" +
-        "\n" +
-        "void main()\n" +
-        "{\n" +
-        "    fColor = aColor;\n" +
-        "    gl_Position = vec4(aPos, 1.0);\n" +
-        "\n" +
-        "}";
+            "layout(location=0) in vec3 aPos;\n" +
+            "layout(location=1) in vec4 aColor;\n" +
+            "\n" +
+            "\n" +
+            "out vec4 fColor;\n" +
+            "\n" +
+            "void main()\n" +
+            "{\n" +
+            "    fColor = aColor;\n" +
+            "    gl_Position = vec4(aPos, 1.0);\n" +
+            "\n" +
+            "}";
 
     private String fragmentShaderSrc = "#version 330 core\n" +
             "\n" +
@@ -42,15 +44,21 @@ public class LevelEditorScene extends Scene {
 
     private float[] vertexArray ={
             //position                  //color       //Alpha
-             0.5f, -0.5f,  0.0f,        1.0f, 0.0f, 0.0f, 1.0f  //bottom right 0
+            0.5f, -0.5f,  0.0f,        1.0f, 0.0f, 0.0f, 1.0f  //bottom right 0
             -0.5f,  0.5f,  0.0f,        0.0f, 1.0f, 0.0f, 1.0f, //top left     1
-             0.5f,  0.5f,  0.0f,        0.0f, 0.0f, 1.0f, 1.0f, //top right    2
+            0.5f,  0.5f,  0.0f,        0.0f, 0.0f, 1.0f, 1.0f, //top right    2
             -0.5f, -0.5f,  0.0f,        1.0f, 1.0f, 0.0f, 1.0f  //bottom left  3
     };
 
     // IMPORTANT must be in counter-clockwise order
     private int[] elementArray={ //triangle init
+            /*
 
+                    *       *
+
+                    *       *
+
+             */
             2,1,0, // top right triangle
             0,1,3 // bottom left triangle
 
@@ -93,7 +101,7 @@ public class LevelEditorScene extends Scene {
         glCompileShader(fragmentID );
 
         //Check for error in compilation
-         success=glGetShaderi(fragmentID,GL_COMPILE_STATUS);
+        success=glGetShaderi(fragmentID,GL_COMPILE_STATUS);
         if(success==GL_FALSE){
             int len = glGetShaderi(fragmentID,GL_INFO_LOG_LENGTH);
             System.out.println("ERROR: 'defaultShader.glsl'\n\tFragment shader compilation failed.");
